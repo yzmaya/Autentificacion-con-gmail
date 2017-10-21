@@ -13,77 +13,56 @@
   };
   firebase.initializeApp(config);
 
+  //creamos la instancia del objeto del rproveedor de google
+
+
+ 
   // Obtener elementos
-  const txtEmail = document.getElementById('txtEmail');
-  const txtPassword = document.getElementById('txtPassword');
-  const btnLogin = document.getElementById('btnLogin');
-  const btnSignUp = document.getElementById('btnSignUp');
-
-  const error = document.getElementById('demo');
-  const prevencion = document.getElementById('demo2');
-
-  // Añadir Evento login
-  btnLogin.addEventListener('click', e => {
-    //Obtener email y pass
-    const email = txtEmail.value;
-    const pass = txtPassword.value;
-    const auth = firebase.auth();
-
-    // Sign in
-    const promise = auth.signInWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message)); 
-    promise.catch(e => error.innerHTML = e.message); 
-     
-  });
-
-  // Añadir evento signup
-  btnSignUp.addEventListener('click', e => {
-    // Obtener email y pass
-    // TODO: comprobar que el email sea real
-    const email = txtEmail.value;
-    const pass = txtPassword.value;
-    const auth = firebase.auth();
-
-    // Sign in
-    const promise = auth.createUserWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
-    promise.catch(e => error.innerHTML = e.message); 
-  });
-
   
-  // Añadir un listener en tiempo real
-   firebase.auth().onAuthStateChanged( firebaseUser => {
-    if(firebaseUser) {
-      console.log(firebaseUser);
-      console.log(firebaseUser.emailVerified);
+  
+ 
+function ingresoGoogle(){
+  // Añadir Evento login
+ // btnGoogle.addEventListener('click', e => {
 
-//var contador = 0;
+if(!firebase.auth().currentUser){
+   var provider = new firebase.auth.GoogleAuthProvider();
 
- if(firebaseUser.emailVerified == true){
-      alert("accediste a hgome html");
-      window.location.href = "home.html";
+   provider.addScope('https://www.googleapis.com/auth/plus.login');
+
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+  // This gives you a Google Access Token. You can use it to access the Google API.
+  var token = result.credential.accessToken;
+  // The signed-in user info.
+  var user = result.user;
+  // ...
+
+  console.log(user);
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  // ...
+
+  if (errorCode==='auth/account-exists-with-different-credential'){
+    alert('Este usuario ya existe ');
+  }
 
 
+    });
+}else{
+  firebase.auth().signOut();
+}
 
-    }else{
+}
+//aqui termina el evento clic de google  
+//});
 
-       firebaseUser.sendEmailVerification().then(function() {
-          // Email sent.
-          alert('se ha enviado una confirmación a tu correo electrónico');
-          error.innerHTML = "";
-          prevencion.innerHTML = "Una vez hayas verificado actualiza tu navegador web (F5)";
-        }).catch(function(error) {
-          // An error happened.
-        });
-    };
+document.getElementById('btnGoogle').addEventListener('click' , ingresoGoogle, false);
 
 
-   
-
-       
-        
-    } else {
-      console.log('no logueado');
-    }    
-  });
 } ());
