@@ -17,7 +17,14 @@
 
 
   btnLogout.addEventListener('click', e => {
-    firebase.auth().signOut();
+
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+       window.location.href = 'index.html';
+    }).catch(function(error) {
+      // An error happened.
+    });
+
   });
 
   // Añadir un listener en tiempo real
