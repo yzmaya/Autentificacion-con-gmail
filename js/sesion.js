@@ -11,10 +11,12 @@
   };
   firebase.initializeApp(config);
 
+
+
   // Obtener elementos
+var Aatrox = document.getElementById("Aatrox");
+
   const btnLogout = document.getElementById('btnLogout');
-
-
 
   btnLogout.addEventListener('click', e => {
 
@@ -32,8 +34,11 @@
     if(firebaseUser) {
       console.log(firebaseUser);
 
-      console.log(firebaseUser.emailVerified);   
-      
+     var miNombre = firebaseUser.displayName; 
+     var myImage = firebaseUser.photoURL; 
+
+      document.querySelector("h3.test").textContent = "Bienvenido " + miNombre; 
+      Aatrox.setAttribute("src", myImage);
     } else {
       console.log('no logueado');
       window.location.href = 'index.html';
